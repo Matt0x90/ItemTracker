@@ -103,7 +103,6 @@ void ItemTracker::writeBackup() const
 /* To call this, just do tracker_.setFilename("NewTextFile.txt"); */
 void ItemTracker::setFileName(const std::string& file_name) 
 {
-	std::cout << "Please input a new file name, case specific, e.g. My_Text_File.txt '\n'";
 	input_file_name_ = file_name; //update file name
 	loadData(); // reload data
 }

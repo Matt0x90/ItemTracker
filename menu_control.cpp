@@ -2,34 +2,71 @@
 
 #include <iostream>
 
+namespace  //helper function isolated for this file in unnamed namespace to wait and clear screen
+{
+	void pauseAndClear()
+	{
+		std::cout << "Press ENTER key to continue . . ."; //Waits for user input
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // flush newline
+		std::cin.get();
+		std::cout << "\x1b[2J\x1b[H" << std::flush; //clear console
+	}
+}
+
 MenuControl::MenuControl() = default; //automatically calls the ItemTracker constructor and loads data.
 
 
 void MenuControl::displayMenu() const
 {
-	//TODO: basic main menu display
-	//Option1: Search item frequency.
-	//Option2: List all item frequencies.
-	//Option3: Histogram Visual
-	//Option4: Exit Program
-	//Option5: Change file name.
-	//Select an option
-	//Wait for input
+	std::cout << "\n===== Corner Grocer Item-Tracker Menu =====\n"
+		<< "1. Search item frequency (case sensitive)\n"
+		<< "2. List all frequencies\n"
+		<< "3. List histogram visual\n"
+		<< "4. Change file name\n"
+		<< "5. Exit program\n"
+	    << "Select an option by entering a number: ";
 	
 }
 
-/* User input choice for each Menu option 1-4 */
+/* User input choice for each Menu option */
 void MenuControl::inputChoice(int choice)
 {
-	//TODO: Handle user input choice
-	//1: Search one
-	//2: List all
-	//3: Histogram
-	//4: change file name
-	std::string new_file_name;
-	std::cin >> new_file_name;
-	tracker_.setFileName(new_file_name);
-	//Switch cases? 4 cases and 1 default for invalid input
+	switch (choice)
+	{
+	case 1: //Menu choice 1 (search by name)
+		{
+		std::string item;
+		std::cout << "Enter item name: ";
+		std::cin >> item;
+		int count = tracker_.getItemCount(item);
+		std::cout << "Your " << item << " had a total frequency of: " << count << '\n';
+		pauseAndClear();
+		break;
+		}
+	case 2: //Menu choice 2 (display all)
+		tracker_.displayAllFrequencies();
+		pauseAndClear();
+		break;
+	case 3: //Menu choice 3 (histogram)
+		tracker_.displayHistogram(); //default '*'
+		pauseAndClear();
+		break;
+	case 4: //Menu choice 4 (change file name)
+		{
+		std::string file_name;
+		std::cout << "Please input a new file name, case specific, e.g. My_Text_File.txt \n";
+		std::cin >> file_name;
+		tracker_.setFileName(file_name);
+		std::cout << "File name successfully changed. Press ENTER key to continue . . ."; //Waits for user input
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // flush newline
+		std::cin.get();
+		std::cout << "\x1b[2J\x1b[H" << std::flush; //clear console
+		break;
+		}
+	default: //Wrong option
+		std::cout << "Invalid option.\n";
+		pauseAndClear();
+	}
 }
 
 /* Main loop logic */
@@ -37,14 +74,10 @@ void MenuControl::startProgram()
 {
 	try
 	{
-		while (true) //main loop, breaks if option 4 is chosen.
+		while (true) //main loop, breaks if option 5 is chosen.
 		{
 			displayMenu(); //display the main menu
 			int choice;
-			std::cout << "Press ENTER key to continue . . ."; //Replacing original press any key to continue with a universal method.
-			std::cin.get();
-			std::cout << "\x1b[2J\x1b[H" << std::flush; //clear console
-			std::cout << "Please enter a number, (1) Search by name. (2) List all. (3) Histogram visual. 4) Exit program. (5) Change file name.'\n'";
 			//input handling, requests user input for choice, if not an int, then clear & try again
 			if (!(std::cin >> choice))
 			{
@@ -54,15 +87,15 @@ void MenuControl::startProgram()
 				continue; //continue with loop and start back over requesting input.
 
 			}
-			if (choice == 4) //Exit
+			if (choice == 5) //Exit
 			{
-				std::cout << "Exiting program, good bye!'\n'";
+				std::cout << "Exiting program, good bye!\n";
 				break; //exits loop and program finishes
 			}
 			inputChoice(choice);
 		}
 	}
-	catch (const std::exception& ex) { // Catching by const reference
+	catch (const std::exception& ex) { // Catching by const reference any derived exception type.
 		std::cerr << "Caught exception: " << ex.what() << '\n';
 	}
 }
