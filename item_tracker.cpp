@@ -1,9 +1,13 @@
 #include "item_tracker.h"
+#include <algorithm>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <stdexcept>
-#include <algorithm>
+
+// TODO:
+// Case insensitive search for names, std::transform and std::tolower changes everything to lowercase.
+// frequency_map_[toLower(item)]++;
 
 /* Color helper unnamed namespace I can re-use throughout this file */
 namespace
@@ -18,13 +22,25 @@ void ItemTracker::loadData()
 {
 	frequency_map_.clear(); //clear frequency map before reading data into it.
 
-	std::ifstream in(input_file_name_); //read input_file_name_ with in object. 
+	std::ifstream in;
+	in.exceptions(std::ios::badbit); //exception handling types to check for upon open file
+	in.open(input_file_name_); //read input_file_name_ with in object.
 	if (!in) //if the stream isn't true, error handling for opening file
 	{
 		throw std::runtime_error("Could not open " + input_file_name_);
+		/* Handled by startProgram's try/catch */
 	}
 
 	std::string item;
+	//while (true)
+	//{
+	//	in >> item; //sets failbit/eofbit only after a read attempt fails.
+	//	if (in.fail()) //if fail/eof, break
+	//	{
+	//		break;
+	//	}
+	//	frequency_map_[item]++; //otherwise increment adding each item to map
+	//} 
 
 	/* in >> item is a boolean conversion that iterates over the file while the stream returns good/true. It'll end at end of file.
 	 * >> treats whitespace as a separator and drops it, so it does each word one by one.
@@ -37,7 +53,7 @@ void ItemTracker::loadData()
 	writeBackup(); // Writes the frequency map data to the backup file.
 }
 
-/* These are the menu options for 1,2,3 -- 4 is exit and handled within the main loop itself in menu_control */
+/* These are the menu options -- exit is handled within the main loop itself in menu_control */
 int ItemTracker::getItemCount(const std::string& item) const //Menu 1
 {
 	//Looked up and saw that instead of using .at, .find is safer.
@@ -62,8 +78,9 @@ void ItemTracker::displayAllFrequencies() const //Menu 2
 
 void ItemTracker::displayHistogram(char symbol) const //Menu 3, default symbol argument is '*'
 {
-	//TODO:
-	//add visual display as an x,y chart? Sort option: vector, pair, sort
+	// TODO:
+	// Auto scale histogram bar length, e.g. std::max_element
+	// add visual display as an x,y chart? Sort option: vector, pair, sort 
 
 	/* Guard for empty visual data */
 	
@@ -72,13 +89,12 @@ void ItemTracker::displayHistogram(char symbol) const //Menu 3, default symbol a
 		std::cout << "No frequency data loaded.\n";
 		return;
 	}
-	/*How to handle symbol length being too long ? */
-
-	/* std::string(pair.second, symbol) builds a string of pair.second copies of symbol.
+	/* How to handle symbol length being too long ?
+	 * std::string(pair.second, symbol) builds a string of pair.second copies of symbol.
 	 * first is the name, second is the value
 	 */
 	for (const auto& pair : frequency_map_)
-	{ //item symbol (count), symbol_length makes max symbol at 16 *
+	{ // Symbol_length makes max symbol at 16 *
 		int symbol_length = std::min(pair.second, 16); //min returns the smaller of (a,b)
 		std::cout << std::setw(15) << std::left << color_green << pair.first << reset_color << ' '
 		<< color_red << std::string(symbol_length, symbol) << reset_color << " (" << pair.second << ")\n";
@@ -86,12 +102,19 @@ void ItemTracker::displayHistogram(char symbol) const //Menu 3, default symbol a
 	}
 }
 
+/* Menu 4 extra option I added: To call this, just do tracker_.setFilename("NewTextFile.txt"); */
+void ItemTracker::setFileName(const std::string& file_name)
+{
+	input_file_name_ = file_name; //update file name
+	loadData(); // reload data
+}
+
+/* Write a backup of the map data to frequency.dat */
 void ItemTracker::writeBackup() const
 {   /* trunc removes the files old content upon opening, so it only writes the current data to back up. */
 	std::ofstream write_backup(backup_file_name_, std::ios::trunc);
 	if (!write_backup) //if the stream isn't true, error handling for opening file
 	{
-		//throw std::runtime_error("Could not write to " + backup_file_name_);
 		std::cerr << color_red << "Could not write to " + backup_file_name_ << reset_color << '\n';
 		return;
  	}
@@ -100,9 +123,4 @@ void ItemTracker::writeBackup() const
 		write_backup << pair.first << ' ' << pair.second << '\n';
 	}
 }
-/* To call this, just do tracker_.setFilename("NewTextFile.txt"); */
-void ItemTracker::setFileName(const std::string& file_name) 
-{
-	input_file_name_ = file_name; //update file name
-	loadData(); // reload data
-}
+

@@ -2,7 +2,6 @@
 #define MENU_CONTROL_H_
 
 #include "item_tracker.h"
-#include <string>
 
 class MenuControl {
 public:

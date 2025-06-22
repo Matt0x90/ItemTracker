@@ -1,6 +1,7 @@
 #include "menu_control.h"
 
 #include <iostream>
+#include <limits>
 
 namespace  //helper function isolated for this file in unnamed namespace to wait and clear screen
 {
@@ -13,7 +14,7 @@ namespace  //helper function isolated for this file in unnamed namespace to wait
 	}
 }
 
-MenuControl::MenuControl() = default; //automatically calls the ItemTracker constructor and loads data.
+MenuControl::MenuControl() = default; //automatically calls the ItemTracker constructor through tracker_ which calls loadData.
 
 
 void MenuControl::displayMenu() const
@@ -85,7 +86,6 @@ void MenuControl::startProgram()
 				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 				std::cout << "Please enter a number.\n";
 				continue; //continue with loop and start back over requesting input.
-
 			}
 			if (choice == 5) //Exit
 			{
