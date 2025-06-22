@@ -7,3 +7,5 @@ Converts data of items/groceries purchased throughout the day into a map with a 
 * The default file it reads from is: "CS210_Project_Three_Input_File.txt"
 * Data for the session is stored and overwritten in: "frequency.dat"
 
+![image](https://github.com/user-attachments/assets/a656336b-05dd-46b1-937a-46fcc1bef150)
+
