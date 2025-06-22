@@ -10,6 +10,7 @@ public:
 	void startProgram(); // Handles the main loop logic, breaks/exits on option 4.
 private:
 	ItemTracker tracker_; // Creating an instance of ItemTracker class inside MenuControl
+	//an itemtracker 'composition, has/a relationship'. 
 	void displayMenu() const; // Handles menu display logic for Menu options 1-3
 	void inputChoice(int choice); // User input choice for each Menu option 1-4
 };
