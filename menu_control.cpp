@@ -9,7 +9,7 @@ namespace  //helper function isolated for this file in unnamed namespace to wait
 	{
 		std::cout << "Press ENTER key to continue . . ."; //Waits for user input
 		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // flush newline
-		std::cin.get();
+		std::cin.get(); 
 		std::cout << "\x1b[2J\x1b[H" << std::flush; //clear console
 	}
 }

@@ -28,7 +28,7 @@ void ItemTracker::loadData()
 	if (!in) //if the stream isn't true, error handling for opening file
 	{
 		throw std::runtime_error("Could not open " + input_file_name_);
-		/* Handled by startProgram's try/catch */
+		/* Handled by main's try/catch */
 	}
 
 	std::string item;
