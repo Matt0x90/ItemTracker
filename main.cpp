@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 // Project 3
 //
-// Developer : Matthew Hall
+// Developer : Matthew
 // Date		 : 06/19/2025
 // Purpose   : Corner Grocer Item-tracker
 // The program analyzes text records and provides information related to the frequency of purchase per item.
